@@ -26,6 +26,21 @@ if (uatPanelEl) {
   });
 }
 
+// Prompt the user once for a piece of their own taxpayer identity and remember
+// it in localStorage. Nothing is hard-coded or committed — each user tests with
+// their own TIN/NRIC/name. Returns "" if the user cancels.
+function getOrAskIdentity(storageKey: string, label: string): string {
+  try {
+    const existing = localStorage.getItem(storageKey);
+    if (existing) return existing;
+    const value = (window.prompt(`Enter ${label}:`) || "").trim();
+    if (value) localStorage.setItem(storageKey, value);
+    return value;
+  } catch {
+    return "";
+  }
+}
+
 const SAMPLE_FILES: Record<string, string> = {
   "valid-json": "samples/valid-invoice.json",
   "invalid-json": "samples/invalid-invoice.json",
@@ -41,14 +56,22 @@ document.querySelectorAll<HTMLButtonElement>("#sample-buttons button[data-sample
     if (!url) return;
     const res = await fetch(url);
     let text = await res.text();
-    // The UAT test invoice carries date placeholders so it's always issued
-    // "now" (LHDN rejects documents whose issuance is >72h old or in the
-    // future). Fill them with a UTC timestamp ~20 min in the past.
+    // The UAT test invoice carries placeholder tokens so no real taxpayer
+    // identity is committed to this public repo. Dates are stamped "now" (LHDN
+    // rejects issuance >72h old or in the future). The supplier identity
+    // (TIN/NRIC/name) is supplied by the *current user* and kept only in their
+    // browser's localStorage — never in the source.
     if (key === "uat-test") {
       const now = new Date(Date.now() - 20 * 60 * 1000);
+      const tin = getOrAskIdentity("uat_supplier_tin", "your MyInvois TIN (e.g. IG… for an individual)");
+      const nric = getOrAskIdentity("uat_supplier_nric", "your NRIC / registration number");
+      const name = getOrAskIdentity("uat_supplier_name", "your registered taxpayer name");
       text = text
         .replace("__ISSUE_DATE__", now.toISOString().slice(0, 10))
-        .replace("__ISSUE_TIME__", now.toISOString().slice(11, 19) + "Z");
+        .replace("__ISSUE_TIME__", now.toISOString().slice(11, 19) + "Z")
+        .replace("__SUPPLIER_TIN__", tin || "__SUPPLIER_TIN__")
+        .replace("__SUPPLIER_NRIC__", nric || "__SUPPLIER_NRIC__")
+        .replace("__SUPPLIER_NAME__", name || "__SUPPLIER_NAME__");
     }
     textarea.value = text;
     fileNameEl.textContent = "";

@@ -22,9 +22,9 @@
               ],
               "PostalAddress": [
                 {
-                  "CityName": [{ "_": "Sungai Petani" }],
-                  "PostalZone": [{ "_": "08000" }],
-                  "CountrySubentityCode": [{ "_": "02" }],
+                  "CityName": [{ "_": "Kuala Lumpur" }],
+                  "PostalZone": [{ "_": "50000" }],
+                  "CountrySubentityCode": [{ "_": "14" }],
                   "AddressLine": [
                     { "Line": [{ "_": "Line 1" }] },
                     { "Line": [{ "_": "Line 2" }] }
@@ -58,7 +58,7 @@
                 }
               ],
               "PartyLegalEntity": [{ "RegistrationName": [{ "_": "General Public" }] }],
-              "Contact": [{ "Telephone": [{ "_": "+60000000000" }], "ElectronicMail": [{ "_": "supplier@example.com" }] }]
+              "Contact": [{ "Telephone": [{ "_": "+60000000000" }], "ElectronicMail": [{ "_": "buyer@example.com" }] }]
             }
           ]
         }
