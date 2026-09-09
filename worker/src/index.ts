@@ -83,6 +83,7 @@ async function handleSubmit(request: Request, env: Env, origin: string): Promise
     format?: "JSON" | "XML";
     codeNumber?: string;
     poll?: boolean;
+    requireSigned?: boolean;
   } | null;
 
   if (!body?.document || !body.format || !body.codeNumber) {
@@ -91,12 +92,17 @@ async function handleSubmit(request: Request, env: Env, origin: string): Promise
   if (body.format !== "JSON" && body.format !== "XML") {
     return json({ error: 'format must be "JSON" or "XML"' }, 400, origin);
   }
-  if (!looksSigned(body.document, body.format)) {
+  // MyInvois sandbox accepts UNSIGNED version 1.0 documents (signature is only
+  // validated for v1.1). So we do not hard-block unsigned docs; we only enforce
+  // a signature when the caller explicitly asks (requireSigned=true, e.g. when
+  // testing the v1.1 signed path). We still report what we detected.
+  const signed = looksSigned(body.document, body.format);
+  if (body.requireSigned && !signed) {
     return json(
       {
         error:
-          "Document does not appear to carry an XAdES signature block. MyInvois " +
-          "(including UAT) rejects unsigned documents. Sign it before submitting.",
+          "requireSigned=true but no XAdES signature block was detected. " +
+          "For v1.1 signature validation the document must be signed.",
       },
       400,
       origin
@@ -113,7 +119,7 @@ async function handleSubmit(request: Request, env: Env, origin: string): Promise
     status = await client.pollUntilDone(token.access_token, submitResult.submissionUid);
   }
 
-  return json({ submission: submitResult, status }, 200, origin);
+  return json({ submission: submitResult, status, signed }, 200, origin);
 }
 
 async function handleStatus(request: Request, env: Env, origin: string): Promise<Response> {

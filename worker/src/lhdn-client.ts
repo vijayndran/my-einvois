@@ -105,11 +105,21 @@ export interface ClientOptions {
 
 export class MyInvoisClient {
   private readonly urls: EnvBaseUrls;
-  private readonly fetchImpl: typeof fetch;
+  private readonly fetchOverride?: typeof fetch;
 
   constructor(opts: ClientOptions) {
     this.urls = BASE_URLS[opts.env];
-    this.fetchImpl = opts.fetchImpl ?? globalThis.fetch;
+    // Do NOT store native fetch on the instance and call it as
+    // `this.fetchImpl(...)` — that rebinds `this` and throws "Illegal
+    // invocation" in Cloudflare Workers. We keep only an optional test
+    // override; when absent we call the global `fetch` directly (see `doFetch`).
+    this.fetchOverride = opts.fetchImpl;
+  }
+
+  /** Always calls fetch with correct binding: override for tests, else global. */
+  private doFetch(input: string, init?: RequestInit): Promise<Response> {
+    if (this.fetchOverride) return this.fetchOverride(input, init);
+    return fetch(input, init);
   }
 
   /** OAuth2 client_credentials login. Returns the token response. */
@@ -127,7 +137,7 @@ export class MyInvoisClient {
     // Intermediary-on-behalf-of a taxpayer uses this header on login.
     if (creds.onBehalfOf) headers["onbehalfof"] = creds.onBehalfOf;
 
-    const res = await this.fetchImpl(`${this.urls.identity}/connect/token`, {
+    const res = await this.doFetch(`${this.urls.identity}/connect/token`, {
       method: "POST",
       headers,
       body: body.toString(),
@@ -164,7 +174,7 @@ export class MyInvoisClient {
       throw new LhdnApiError("Submission exceeds 5 MB", 400, null);
     }
 
-    const res = await this.fetchImpl(`${this.urls.api}/api/v1.0/documentsubmissions/`, {
+    const res = await this.doFetch(`${this.urls.api}/api/v1.0/documentsubmissions/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -183,13 +193,11 @@ export class MyInvoisClient {
 
   /** Fetch the current status of a submission by its submissionUid. */
   async getSubmission(accessToken: string, submissionUid: string): Promise<SubmissionStatus> {
-    const res = await this.fetchImpl(
-      `${this.urls.api}/api/v1.0/documentsubmissions/${encodeURIComponent(submissionUid)}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+    const res = await this.doFetch(`${this.urls.api}/api/v1.0/documentsubmissions/${encodeURIComponent(submissionUid)}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
     const parsed = await safeJson(res);
     if (!res.ok) {
@@ -213,7 +221,18 @@ export class MyInvoisClient {
 
     let last: SubmissionStatus | undefined;
     for (let i = 0; i < attempts; i++) {
-      last = await this.getSubmission(accessToken, submissionUid);
+      try {
+        last = await this.getSubmission(accessToken, submissionUid);
+      } catch (err) {
+        // Right after submit, the submission may not be queryable yet and LHDN
+        // returns 404. Treat an early 404 as "still in progress" and retry;
+        // rethrow other errors or a persistent 404 on the final attempt.
+        if (err instanceof LhdnApiError && err.status === 404 && i < attempts - 1) {
+          await sleep(delayMs);
+          continue;
+        }
+        throw err;
+      }
       if (last.overallStatus && last.overallStatus.toLowerCase() !== "inprogress") {
         return last;
       }

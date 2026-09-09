@@ -129,6 +129,18 @@ test("pollUntilDone gives up after max attempts and returns last status", async 
   assert.equal(result.overallStatus, "InProgress");
 });
 
+test("pollUntilDone tolerates an early 404 then returns terminal status", async () => {
+  const seq = [
+    () => mockResponse(404, { error: { code: "NotFound" } }),
+    () => mockResponse(200, { submissionUid: "S", overallStatus: "Valid" }),
+  ];
+  let i = 0;
+  const { fn } = fakeFetch(() => seq[Math.min(i++, seq.length - 1)]());
+  const client = new MyInvoisClient({ env: "uat", fetchImpl: fn });
+  const result = await client.pollUntilDone("tok", "S", { attempts: 4, delayMs: 0, sleep: async () => {} });
+  assert.equal(result.overallStatus, "Valid");
+});
+
 test("prod env uses the production base URL", () => {
   assert.equal(BASE_URLS.prod.api, "https://api.myinvois.hasil.gov.my");
   assert.equal(BASE_URLS.uat.api, "https://preprod-api.myinvois.hasil.gov.my");
