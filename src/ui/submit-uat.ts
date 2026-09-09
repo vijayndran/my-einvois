@@ -34,10 +34,26 @@ export function initUatSubmit(
   getDocument: () => { text: string; format: "JSON" | "XML" | null }
 ): void {
   panel.innerHTML = `
+    <div class="uat-note">
+      <strong>Personal sandbox demo.</strong> This button submits to LHDN's
+      <em>pre-production</em> (UAT/sandbox) environment using the author's own
+      test taxpayer identity, purely to demonstrate the login &rarr; submit
+      &rarr; UUID &rarr; validation-result pipeline. It is <strong>not</strong>
+      a submission service for your own documents:
+      <ul class="uat-note-list">
+        <li>LHDN requires the invoice's supplier TIN to match the authenticated
+          account, so only documents issued under the demo identity are accepted
+          &mdash; your own ERP's JSON will be rejected with a TIN-mismatch error.</li>
+        <li>Nothing here reaches production. To submit real documents, use your
+          own ERP integration with your own LHDN credentials.</li>
+        <li>Try the <em>&ldquo;My UAT test invoice&rdquo;</em> sample above to see a
+          <em>Valid</em> result end-to-end.</li>
+      </ul>
+    </div>
     <div class="uat-row">
       <button type="button" id="uat-submit-btn" class="primary-btn">Submit to UAT</button>
       <label class="uat-poll"><input type="checkbox" id="uat-poll" checked /> Poll for result</label>
-      <span class="uat-hint">Sends the document above to LHDN's sandbox via the proxy.</span>
+      <span class="uat-hint">Submits to LHDN sandbox via a proxy (server-held test credentials).</span>
     </div>
     <div id="uat-result" class="uat-result"></div>
   `;
