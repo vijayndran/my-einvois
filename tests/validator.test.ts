@@ -51,8 +51,34 @@ test("invalid XML sample fails with expected error codes", async () => {
   assert.ok(codes.has("SIG-EXTENSION-MISSING"));
 });
 
-test("unrecognised input is reported, not thrown", async () => {
-  const result = await validateDocument("not a document at all");
+test("v1.0 unsigned document downgrades signature errors to warnings", async () => {
+  // The UAT test invoice is version 1.0 with placeholder dates and no signature.
+  let raw = await sample("uat-test-invoice.json");
+  raw = raw.replace("__ISSUE_DATE__", "2026-09-01").replace("__ISSUE_TIME__", "09:15:00Z");
+  const result = await validateDocument(raw);
+  assert.equal(result.format, "json");
+  assert.equal(result.normalized.versionId, "1.0");
+
+  const sigPlaceholder = result.issues.find((i) => i.code === "SIG-PLACEHOLDER-MISSING");
+  const sigExtension = result.issues.find((i) => i.code === "SIG-EXTENSION-MISSING");
+  assert.ok(sigPlaceholder, "expected SIG-PLACEHOLDER-MISSING to be reported");
+  assert.ok(sigExtension, "expected SIG-EXTENSION-MISSING to be reported");
+  // For v1.0 these must be warnings, not errors.
+  assert.equal(sigPlaceholder!.severity, "warning");
+  assert.equal(sigExtension!.severity, "warning");
+});
+
+test("v1.1 unsigned document keeps signature findings as errors", async () => {
+  // The invalid sample is version 1.1 and has no signature block.
+  const raw = await sample("invalid-invoice.json");
+  const result = await validateDocument(raw);
+  assert.equal(result.normalized.versionId, "1.1");
+  const sigExtension = result.issues.find((i) => i.code === "SIG-EXTENSION-MISSING");
+  assert.ok(sigExtension, "expected SIG-EXTENSION-MISSING to be reported");
+  assert.equal(sigExtension!.severity, "error");
+});
+
+test("unrecognised input is reported, not thrown", async () => {  const result = await validateDocument("not a document at all");
   assert.equal(isValid(result), false);
   assert.equal(result.issues[0]?.code, "INPUT-FORMAT-UNKNOWN");
 });

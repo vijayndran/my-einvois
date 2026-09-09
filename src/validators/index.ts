@@ -60,7 +60,7 @@ export async function validateDocument(raw: string, formatHint?: "json" | "xml")
     ...validateParty(normalized.buyer, "Buyer", { requireMsic: false, requireContact: true }),
     ...normalized.lines.flatMap((line, i) => validateLine(line, i)),
     ...validateMonetary(normalized),
-    ...validateSignature(normalized.signature),
+    ...validateSignature(normalized.signature, normalized.versionId),
   ];
 
   return { format, documentTypeLabel, issues, normalized };

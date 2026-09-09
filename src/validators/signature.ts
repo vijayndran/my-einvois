@@ -13,14 +13,25 @@ import { err, warn } from "./common.js";
  * endpoint can authoritatively perform). Treat a pass here as "shaped
  * correctly for submission", not "cryptographically valid".
  */
-export function validateSignature(sig: SignatureStructure): ValidationIssue[] {
+export function validateSignature(sig: SignatureStructure, versionId?: string): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
+
+  // A digital signature is only *validated* for document version 1.1. For
+  // version 1.0 LHDN accepts unsigned documents, so a missing signature there
+  // is informational (a warning) rather than an error. Anything else (1.1 or an
+  // unknown version) keeps the stricter error severity.
+  const signatureOptional = versionId === "1.0";
+  const missingSig = signatureOptional ? warn : err;
+  const optionalNote = signatureOptional
+    ? " (Document version 1.0 does not require a signature, so this is informational — LHDN validates signatures only for v1.1.)"
+    : "";
 
   if (!sig.placeholderPresent) {
     issues.push(
-      err(
+      missingSig(
         "SIG-PLACEHOLDER-MISSING",
-        "The document-level Signature placeholder element (cac:Signature in XML, or the top-level Signature array in JSON) is missing. This is mandatory on every submitted document.",
+        "The document-level Signature placeholder element (cac:Signature in XML, or the top-level Signature array in JSON) is missing. This is mandatory on every signature-validated document." +
+          optionalNote,
         "Signature"
       )
     );
@@ -28,9 +39,10 @@ export function validateSignature(sig: SignatureStructure): ValidationIssue[] {
 
   if (!sig.extensionPresent) {
     issues.push(
-      err(
+      missingSig(
         "SIG-EXTENSION-MISSING",
-        "No UBLExtensions signature block was found. LHDN requires an enveloped XAdES signature under ext:UBLExtensions (XML) or the UBLExtensions array (JSON) for signature-validated document versions (e.g. Invoice v1.1).",
+        "No UBLExtensions signature block was found. LHDN requires an enveloped XAdES signature under ext:UBLExtensions (XML) or the UBLExtensions array (JSON) for signature-validated document versions (e.g. Invoice v1.1)." +
+          optionalNote,
         "UBLExtensions"
       )
     );
