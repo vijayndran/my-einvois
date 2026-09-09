@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+dist/
+
+# Generated test signing material — never commit
+scripts/test-key.pem
+scripts/test-cert.pem
+*.pem
+
+# Local secrets
+.dev.vars
+.env

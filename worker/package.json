@@ -1,0 +1,21 @@
+{
+  "name": "myinvois-uat-proxy",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker proxy that logs in to LHDN MyInvois (UAT/sandbox), submits a signed e-Invoice, and polls for the validation result + UUID. Keeps the client_id/client_secret server-side and sidesteps the browser CORS wall.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/**/*.test.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "gen-test-cert": "node scripts/gen-test-cert.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240909.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "wrangler": "^3.78.0"
+  }
+}

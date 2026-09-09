@@ -1,0 +1,39 @@
+name = "myinvois-uat-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-09-09"
+compatibility_flags = ["nodejs_compat"]
+
+# ---------------------------------------------------------------------------
+# Non-secret configuration. Override per-environment as needed.
+#
+# MYINVOIS_ENV selects which LHDN base URLs the client uses:
+#   "uat"  -> https://preprod-api.myinvois.hasil.gov.my  (sandbox / UAT)
+#   "prod" -> https://api.myinvois.hasil.gov.my          (production)
+#
+# ALLOWED_ORIGIN must match the site that calls this Worker (your Pages site),
+# so CORS is locked to your front end rather than open to the world.
+# ---------------------------------------------------------------------------
+[vars]
+MYINVOIS_ENV = "uat"
+ALLOWED_ORIGIN = "https://vijayndran.github.io"
+
+# ---------------------------------------------------------------------------
+# SECRETS (never commit these). Set them with:
+#   npx wrangler secret put MYINVOIS_CLIENT_ID
+#   npx wrangler secret put MYINVOIS_CLIENT_SECRET
+#
+# For on behalf of a taxpayer as an intermediary, also (optional):
+#   npx wrangler secret put MYINVOIS_ONBEHALFOF   # taxpayer TIN
+#
+# Signing material for UAT (self-signed test cert is acceptable in UAT):
+#   npx wrangler secret put SIGNING_CERT_PEM       # X.509 cert (PEM)
+#   npx wrangler secret put SIGNING_KEY_PEM        # private key (PEM, PKCS#8)
+# ---------------------------------------------------------------------------
+
+[env.uat.vars]
+MYINVOIS_ENV = "uat"
+ALLOWED_ORIGIN = "https://vijayndran.github.io"
+
+[env.prod.vars]
+MYINVOIS_ENV = "prod"
+ALLOWED_ORIGIN = "https://vijayndran.github.io"
