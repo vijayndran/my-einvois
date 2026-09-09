@@ -207,6 +207,23 @@ export class MyInvoisClient {
   }
 
   /**
+   * Fetch full document details (including the per-rule validation results)
+   * for a document UUID. This is where LHDN explains *why* a document is
+   * Invalid — the submission summary only gives the overall status.
+   */
+  async getDocumentDetails(accessToken: string, uuid: string): Promise<unknown> {
+    const res = await this.doFetch(
+      `${this.urls.api}/api/v1.0/documents/${encodeURIComponent(uuid)}/details`,
+      { method: "GET", headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+    const parsed = await safeJson(res);
+    if (!res.ok) {
+      throw new LhdnApiError(`Get document details failed (HTTP ${res.status})`, res.status, parsed);
+    }
+    return parsed;
+  }
+
+  /**
    * Poll getSubmission until the overall status is terminal (not "InProgress")
    * or attempts run out. Returns the last status seen.
    */

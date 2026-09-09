@@ -45,6 +45,9 @@ export default {
       if (request.method === "POST" && url.pathname === "/status") {
         return await handleStatus(request, env, origin);
       }
+      if (request.method === "POST" && url.pathname === "/details") {
+        return await handleDetails(request, env, origin);
+      }
       return json({ error: "Not found" }, 404, origin);
     } catch (err) {
       if (err instanceof LhdnApiError) {
@@ -131,6 +134,17 @@ async function handleStatus(request: Request, env: Env, origin: string): Promise
   const token = await client.login(credentials(env));
   const status = await client.getSubmission(token.access_token, body.submissionUid);
   return json({ status }, 200, origin);
+}
+
+async function handleDetails(request: Request, env: Env, origin: string): Promise<Response> {
+  const body = (await request.json().catch(() => null)) as { uuid?: string } | null;
+  if (!body?.uuid) {
+    return json({ error: "Body must include uuid" }, 400, origin);
+  }
+  const client = clientFor(env);
+  const token = await client.login(credentials(env));
+  const details = await client.getDocumentDetails(token.access_token, body.uuid);
+  return json({ details }, 200, origin);
 }
 
 // ------------------------------- CORS/JSON ---------------------------------

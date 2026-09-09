@@ -31,6 +31,7 @@ const SAMPLE_FILES: Record<string, string> = {
   "invalid-json": "samples/invalid-invoice.json",
   "valid-xml": "samples/valid-invoice.xml",
   "invalid-xml": "samples/invalid-invoice.xml",
+  "uat-test": "samples/uat-test-invoice.json",
 };
 
 document.querySelectorAll<HTMLButtonElement>("#sample-buttons button[data-sample]").forEach((btn) => {
@@ -39,7 +40,17 @@ document.querySelectorAll<HTMLButtonElement>("#sample-buttons button[data-sample
     const url = SAMPLE_FILES[key];
     if (!url) return;
     const res = await fetch(url);
-    textarea.value = await res.text();
+    let text = await res.text();
+    // The UAT test invoice carries date placeholders so it's always issued
+    // "now" (LHDN rejects documents whose issuance is >72h old or in the
+    // future). Fill them with a UTC timestamp ~20 min in the past.
+    if (key === "uat-test") {
+      const now = new Date(Date.now() - 20 * 60 * 1000);
+      text = text
+        .replace("__ISSUE_DATE__", now.toISOString().slice(0, 10))
+        .replace("__ISSUE_TIME__", now.toISOString().slice(11, 19) + "Z");
+    }
+    textarea.value = text;
     fileNameEl.textContent = "";
     runValidation();
   });
