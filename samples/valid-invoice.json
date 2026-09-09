@@ -1,0 +1,262 @@
+{
+  "_D": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+  "_A": "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+  "_B": "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+  "Invoice": [
+    {
+      "ID": [{ "_": "SAMPLE-INV-0001" }],
+      "IssueDate": [{ "_": "2026-09-01" }],
+      "IssueTime": [{ "_": "09:15:00Z" }],
+      "InvoiceTypeCode": [{ "_": "01", "listVersionID": "1.1" }],
+      "DocumentCurrencyCode": [{ "_": "MYR" }],
+
+      "AccountingSupplierParty": [
+        {
+          "Party": [
+            {
+              "IndustryClassificationCode": [
+                { "_": "46510", "name": "Wholesale of computer hardware, software and peripherals" }
+              ],
+              "PartyIdentification": [
+                { "ID": [{ "_": "C2584563222", "schemeID": "TIN" }] },
+                { "ID": [{ "_": "202001123456", "schemeID": "BRN" }] },
+                { "ID": [{ "_": "NA", "schemeID": "SST" }] },
+                { "ID": [{ "_": "NA", "schemeID": "TTX" }] }
+              ],
+              "PostalAddress": [
+                {
+                  "CityName": [{ "_": "Kuala Lumpur" }],
+                  "PostalZone": [{ "_": "50480" }],
+                  "CountrySubentityCode": [{ "_": "14" }],
+                  "AddressLine": [
+                    { "Line": [{ "_": "Lot 66, Jalan Teknologi" }] },
+                    { "Line": [{ "_": "Bangunan Merdeka" }] }
+                  ],
+                  "Country": [
+                    { "IdentificationCode": [{ "_": "MYS", "listID": "ISO3166-1", "listAgencyID": "6" }] }
+                  ]
+                }
+              ],
+              "PartyLegalEntity": [{ "RegistrationName": [{ "_": "Contoso Supplies Sdn. Bhd." }] }],
+              "Contact": [
+                { "Telephone": [{ "_": "+60000000000" }], "ElectronicMail": [{ "_": "billing@contoso-supplies.my" }] }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "AccountingCustomerParty": [
+        {
+          "Party": [
+            {
+              "PartyIdentification": [
+                { "ID": [{ "_": "C2584563200", "schemeID": "TIN" }] },
+                { "ID": [{ "_": "202101987654", "schemeID": "BRN" }] },
+                { "ID": [{ "_": "NA", "schemeID": "SST" }] },
+                { "ID": [{ "_": "NA", "schemeID": "TTX" }] }
+              ],
+              "PostalAddress": [
+                {
+                  "CityName": [{ "_": "Petaling Jaya" }],
+                  "PostalZone": [{ "_": "46200" }],
+                  "CountrySubentityCode": [{ "_": "10" }],
+                  "AddressLine": [{ "Line": [{ "_": "Level 8, Menara Hebat" }] }],
+                  "Country": [
+                    { "IdentificationCode": [{ "_": "MYS", "listID": "ISO3166-1", "listAgencyID": "6" }] }
+                  ]
+                }
+              ],
+              "PartyLegalEntity": [{ "RegistrationName": [{ "_": "Hebat Group Sdn. Bhd." }] }],
+              "Contact": [
+                { "Telephone": [{ "_": "+60378123456" }], "ElectronicMail": [{ "_": "ap@hebatgroup.my" }] }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "InvoiceLine": [
+        {
+          "ID": [{ "_": "1" }],
+          "InvoicedQuantity": [{ "_": 2, "unitCode": "C62" }],
+          "LineExtensionAmount": [{ "_": 200.0, "currencyID": "MYR" }],
+          "TaxTotal": [
+            {
+              "TaxAmount": [{ "_": 12.0, "currencyID": "MYR" }],
+              "TaxSubtotal": [
+                {
+                  "TaxableAmount": [{ "_": 200.0, "currencyID": "MYR" }],
+                  "TaxAmount": [{ "_": 12.0, "currencyID": "MYR" }],
+                  "Percent": [{ "_": 6 }],
+                  "TaxCategory": [
+                    {
+                      "ID": [{ "_": "01" }],
+                      "TaxScheme": [{ "ID": [{ "_": "OTH", "schemeID": "UN/ECE 5153", "schemeAgencyID": "6" }] }]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "Item": [
+            {
+              "Description": [{ "_": "27-inch business monitor" }],
+              "OriginCountry": [{ "IdentificationCode": [{ "_": "MYS" }] }],
+              "CommodityClassification": [{ "ItemClassificationCode": [{ "_": "003", "listID": "CLASS" }] }]
+            }
+          ],
+          "Price": [{ "PriceAmount": [{ "_": 100.0, "currencyID": "MYR" }] }],
+          "ItemPriceExtension": [{ "Amount": [{ "_": 200.0, "currencyID": "MYR" }] }]
+        }
+      ],
+
+      "TaxTotal": [
+        {
+          "TaxAmount": [{ "_": 12.0, "currencyID": "MYR" }],
+          "TaxSubtotal": [
+            {
+              "TaxableAmount": [{ "_": 200.0, "currencyID": "MYR" }],
+              "TaxAmount": [{ "_": 12.0, "currencyID": "MYR" }],
+              "TaxCategory": [
+                {
+                  "ID": [{ "_": "01" }],
+                  "TaxScheme": [{ "ID": [{ "_": "OTH", "schemeID": "UN/ECE 5153", "schemeAgencyID": "6" }] }]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+
+      "LegalMonetaryTotal": [
+        {
+          "LineExtensionAmount": [{ "_": 200.0, "currencyID": "MYR" }],
+          "TaxExclusiveAmount": [{ "_": 200.0, "currencyID": "MYR" }],
+          "TaxInclusiveAmount": [{ "_": 212.0, "currencyID": "MYR" }],
+          "PayableRoundingAmount": [{ "_": 0.0, "currencyID": "MYR" }],
+          "PayableAmount": [{ "_": 212.0, "currencyID": "MYR" }]
+        }
+      ],
+
+      "PaymentMeans": [{ "PaymentMeansCode": [{ "_": "03" }] }],
+
+      "Signature": [
+        {
+          "ID": [{ "_": "urn:oasis:names:specification:ubl:signature:Invoice" }],
+          "SignatureMethod": [{ "_": "urn:oasis:names:specification:ubl:dsig:enveloped:xades" }]
+        }
+      ],
+
+      "UBLExtensions": [
+        {
+          "UBLExtension": [
+            {
+              "ExtensionURI": [{ "_": "urn:oasis:names:specification:ubl:dsig:enveloped:xades" }],
+              "ExtensionContent": [
+                {
+                  "UBLDocumentSignatures": [
+                    {
+                      "SignatureInformation": [
+                        {
+                          "ID": [{ "_": "urn:oasis:names:specification:ubl:signature:1" }],
+                          "ReferencedSignatureID": [{ "_": "urn:oasis:names:specification:ubl:signature:Invoice" }],
+                          "Signature": [
+                            {
+                              "Id": "signature",
+                              "SignedInfo": [
+                                {
+                                  "SignatureMethod": [
+                                    { "_": "", "Algorithm": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" }
+                                  ],
+                                  "Reference": [
+                                    {
+                                      "Type": "http://uri.etsi.org/01903/v1.3.2#SignedProperties",
+                                      "URI": "#id-xades-signed-props",
+                                      "DigestMethod": [
+                                        { "_": "", "Algorithm": "http://www.w3.org/2001/04/xmlenc#sha256" }
+                                      ],
+                                      "DigestValue": [{ "_": "PLACEHOLDER-DIGEST-1==" }]
+                                    },
+                                    {
+                                      "Type": "",
+                                      "URI": "",
+                                      "DigestMethod": [
+                                        { "_": "", "Algorithm": "http://www.w3.org/2001/04/xmlenc#sha256" }
+                                      ],
+                                      "DigestValue": [{ "_": "PLACEHOLDER-DIGEST-2==" }]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "SignatureValue": [{ "_": "PLACEHOLDER-SIGNATURE-VALUE==" }],
+                              "KeyInfo": [
+                                {
+                                  "X509Data": [
+                                    {
+                                      "X509Certificate": [{ "_": "PLACEHOLDER-CERTIFICATE-BASE64==" }]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Object": [
+                                {
+                                  "QualifyingProperties": [
+                                    {
+                                      "Target": "signature",
+                                      "SignedProperties": [
+                                        {
+                                          "Id": "id-xades-signed-props",
+                                          "SignedSignatureProperties": [
+                                            {
+                                              "SigningTime": [{ "_": "2026-09-01T09:15:30Z" }],
+                                              "SigningCertificate": [
+                                                {
+                                                  "Cert": [
+                                                    {
+                                                      "CertDigest": [
+                                                        {
+                                                          "DigestMethod": [
+                                                            {
+                                                              "_": "",
+                                                              "Algorithm": "http://www.w3.org/2001/04/xmlenc#sha256"
+                                                            }
+                                                          ],
+                                                          "DigestValue": [{ "_": "PLACEHOLDER-CERT-DIGEST==" }]
+                                                        }
+                                                      ],
+                                                      "IssuerSerial": [
+                                                        {
+                                                          "X509IssuerName": [
+                                                            { "_": "CN=Sample Trial CA, O=Sample, C=MY" }
+                                                          ],
+                                                          "X509SerialNumber": [{ "_": "123456789012345" }]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

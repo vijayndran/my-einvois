@@ -1,0 +1,23 @@
+{
+  "name": "myinvois-einvoice-validator",
+  "version": "1.0.0",
+  "description": "Structural, business-rule, and signature-structure validator for Malaysia LHDN MyInvois e-Invoice documents (JSON and XML, UBL 2.1), with a static Cloudflare Pages front end.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch --serve",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/**/*.test.ts"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.9.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

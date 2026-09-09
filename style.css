@@ -1,0 +1,257 @@
+:root {
+  --bg: #0b1220;
+  --panel: #121b2e;
+  --panel-border: #22304a;
+  --text: #e6ecf5;
+  --text-dim: #94a3b8;
+  --accent: #3dd6c4;
+  --accent-dim: #1d8f82;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --ok: #4ade80;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  max-width: 780px;
+  margin: 0 0 28px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.sample-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.sample-label {
+  color: var(--text-dim);
+  margin-right: 2px;
+}
+
+.sample-buttons button {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.sample-buttons button:hover {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.doc-textarea {
+  flex: 1;
+  min-height: 300px;
+  width: 100%;
+  resize: vertical;
+  background: #0b1220;
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.doc-textarea:focus {
+  outline: 2px solid var(--accent-dim);
+}
+
+.input-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.file-drop {
+  border: 1px dashed var(--panel-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--text-dim);
+}
+
+.file-drop:hover {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.file-name {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.primary-btn {
+  margin-left: auto;
+  background: var(--accent);
+  color: #08201c;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #56e2d1;
+}
+
+.results {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.empty-state {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-idle { background: #1e293b; color: var(--text-dim); }
+.badge-pass { background: rgba(74, 222, 128, 0.15); color: var(--ok); }
+.badge-fail { background: rgba(248, 113, 113, 0.15); color: var(--error); }
+
+.summary-line {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.summary-line strong {
+  color: var(--text);
+}
+
+.issue-group h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin: 18px 0 8px;
+}
+
+.issue {
+  border-left: 3px solid var(--panel-border);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+}
+
+.issue.error {
+  border-left-color: var(--error);
+}
+
+.issue.warning {
+  border-left-color: var(--warning);
+}
+
+.issue .issue-code {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.issue .issue-path {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+
+.footer {
+  margin-top: 36px;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--accent);
+}
