@@ -6,6 +6,11 @@
 //                     accepted/rejected docs (with uuid), and status.
 //   POST /status   { submissionUid: string }
 //                  -> logs in and returns the current submission status.
+//   POST /details  { uuid: string }
+//                  -> raw LHDN Get Document Details (includes validationResults).
+//   POST /diagnose { document, format, codeNumber }
+//                  -> submit + poll + fetch details, decoded into plain-English
+//                     diagnostics with fix hints (the paid "Diagnose" tier).
 //   GET  /health   -> { ok: true, env } (no secrets, no LHDN call)
 //
 // CORS is locked to ALLOWED_ORIGIN so only your front end can call it.
@@ -17,6 +22,7 @@ import {
   type LoginCredentials,
 } from "./lhdn-client.js";
 import { prepareForSubmission, looksSigned } from "./signing.js";
+import { decodeDocumentDetails } from "./diagnostics.js";
 
 export interface Env {
   MYINVOIS_ENV: string;
@@ -47,6 +53,9 @@ export default {
       }
       if (request.method === "POST" && url.pathname === "/details") {
         return await handleDetails(request, env, origin);
+      }
+      if (request.method === "POST" && url.pathname === "/diagnose") {
+        return await handleDiagnose(request, env, origin);
       }
       return json({ error: "Not found" }, 404, origin);
     } catch (err) {
@@ -145,6 +154,77 @@ async function handleDetails(request: Request, env: Env, origin: string): Promis
   const token = await client.login(credentials(env));
   const details = await client.getDocumentDetails(token.access_token, body.uuid);
   return json({ details }, 200, origin);
+}
+
+// PAID "Diagnose" tier: submit a document, wait for LHDN's verdict, then fetch
+// the full document details and decode the raw validationSteps into a clean,
+// human-readable list of failures with fix hints. This is the "why did LHDN
+// reject me, and how do I fix it" endpoint.
+async function handleDiagnose(request: Request, env: Env, origin: string): Promise<Response> {
+  const body = (await request.json().catch(() => null)) as {
+    document?: string;
+    format?: "JSON" | "XML";
+    codeNumber?: string;
+  } | null;
+
+  if (!body?.document || !body.format || !body.codeNumber) {
+    return json({ error: "Body must include document, format, and codeNumber" }, 400, origin);
+  }
+  if (body.format !== "JSON" && body.format !== "XML") {
+    return json({ error: 'format must be "JSON" or "XML"' }, 400, origin);
+  }
+
+  const client = clientFor(env);
+  const token = await client.login(credentials(env));
+  const doc = await prepareForSubmission(body.document, body.format, body.codeNumber);
+  const submitResult = await client.submit(token.access_token, [doc]);
+
+  // If LHDN rejected it synchronously (structural), surface that as a diagnostic
+  // straight away — there's no uuid to fetch details for.
+  const accepted = submitResult.acceptedDocuments?.[0];
+  const rejected = submitResult.rejectedDocuments?.[0];
+  if (!accepted && rejected) {
+    return json(
+      {
+        status: "Invalid",
+        valid: false,
+        signed: looksSigned(body.document, body.format),
+        submissionUid: submitResult.submissionUid,
+        diagnostics: [
+          {
+            message:
+              typeof (rejected.error as { message?: string })?.message === "string"
+                ? (rejected.error as { message?: string }).message
+                : "Document rejected during synchronous validation.",
+            severity: "error",
+            code: (rejected.error as { code?: string })?.code,
+          },
+        ],
+        raw: submitResult,
+      },
+      200,
+      origin
+    );
+  }
+
+  if (!accepted) {
+    return json({ error: "No document was accepted for processing", raw: submitResult }, 502, origin);
+  }
+
+  // Poll to a terminal state, then pull the detailed per-rule results.
+  await client.pollUntilDone(token.access_token, submitResult.submissionUid);
+  const details = await client.getDocumentDetails(token.access_token, accepted.uuid);
+  const diagnosis = decodeDocumentDetails(details);
+
+  return json(
+    {
+      ...diagnosis,
+      submissionUid: submitResult.submissionUid,
+      signed: looksSigned(body.document, body.format),
+    },
+    200,
+    origin
+  );
 }
 
 // ------------------------------- CORS/JSON ---------------------------------

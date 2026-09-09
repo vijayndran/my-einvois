@@ -141,6 +141,42 @@ Response:
 ```
 Returns the current submission status.
 
+### `POST /details`
+```jsonc
+{ "uuid": "…26 chars…" }
+```
+Returns the raw LHDN `Get Document Details` object (including `validationResults`).
+
+### `POST /diagnose`  (the "Diagnose" tier)
+```jsonc
+{ "document": "<document string>", "format": "JSON", "codeNumber": "DIAG-001" }
+```
+Submits the document, waits for LHDN's verdict, then fetches the full details and
+**decodes the raw validationSteps into plain-English diagnostics with fix hints**.
+Response:
+```jsonc
+{
+  "status": "Invalid",
+  "valid": false,
+  "uuid": "…",
+  "submissionUid": "…",
+  "signed": false,
+  "diagnostics": [
+    {
+      "step": "Step05-Taxpayer Profile Validator",
+      "code": "ERR236",
+      "message": "Where General TIN (010) and ID Type BRN/NRIC = NA, applicable for Classification Code 004 only",
+      "propertyPath": "document.Invoice.AccountingCustomerParty.Party.PartyIdentification.ID",
+      "hint": "When the buyer is the general public (TIN EI00000000010 with BRN/NRIC = NA), every invoice line's item classification code must be 004. Change ItemClassificationCode to 004.",
+      "severity": "error"
+    }
+  ]
+}
+```
+When the document is accepted, `valid` is `true` and `diagnostics` is empty. The
+code→hint mapping lives in `src/diagnostics.ts` and is the product's moat — extend
+it with every new rejection code you encounter.
+
 ## Wiring the front end
 
 From your Pages site, point at the deployed Worker:
