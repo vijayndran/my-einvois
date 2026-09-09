@@ -2,6 +2,7 @@ import { validateDocument } from "../validators/index.js";
 import { isValid } from "../types.js";
 import type { ValidationIssue } from "../types.js";
 import { initServiceStatus } from "./service-status.js";
+import { initUatSubmit } from "./submit-uat.js";
 
 const textarea = document.getElementById("doc-input") as HTMLTextAreaElement;
 const validateBtn = document.getElementById("validate-btn") as HTMLButtonElement;
@@ -13,6 +14,16 @@ const badgeEl = document.getElementById("result-badge") as HTMLSpanElement;
 const statusBarEl = document.getElementById("service-status");
 if (statusBarEl) {
   initServiceStatus(statusBarEl);
+}
+
+const uatPanelEl = document.getElementById("uat-panel");
+if (uatPanelEl) {
+  initUatSubmit(uatPanelEl, () => {
+    const text = textarea.value;
+    const trimmed = text.trim();
+    const format = trimmed.startsWith("{") ? "JSON" : trimmed.startsWith("<") ? "XML" : null;
+    return { text, format };
+  });
 }
 
 const SAMPLE_FILES: Record<string, string> = {

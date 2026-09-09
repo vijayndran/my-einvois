@@ -340,3 +340,111 @@ body {
   color: #64748b;
   font-size: 0.72rem;
 }
+
+
+.uat-section {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.uat-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uat-badge {
+  background: rgba(61, 214, 196, 0.15);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+}
+
+.uat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.uat-poll {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.uat-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  flex: 1;
+  min-width: 160px;
+}
+
+.uat-result {
+  margin-top: 12px;
+}
+
+.uat-pending {
+  color: var(--warning);
+  font-size: 0.85rem;
+}
+
+.uat-error {
+  color: var(--error);
+  font-size: 0.85rem;
+}
+
+.uat-card {
+  border: 1px solid var(--panel-border);
+  border-left-width: 3px;
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.uat-card-ok { border-left-color: var(--ok); }
+.uat-card-err { border-left-color: var(--error); }
+.uat-card-pending { border-left-color: var(--warning); }
+
+.uat-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.82rem;
+  padding: 3px 0;
+}
+
+.uat-line span { color: var(--text-dim); }
+.uat-line strong { color: var(--text); font-family: var(--mono); font-size: 0.78rem; word-break: break-all; text-align: right; }
+
+.uat-msg {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.uat-msg code { color: var(--warning); font-family: var(--mono); }
+
+.uat-pre {
+  margin-top: 10px;
+  background: #0b1220;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  max-height: 220px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
