@@ -18,6 +18,27 @@
       <div class="service-status" id="service-status" aria-live="polite"></div>
     </header>
 
+    <section class="cta-band" aria-labelledby="cta-heading">
+      <div class="cta-copy">
+        <h2 id="cta-heading" class="cta-headline">Your invoice looks valid. LHDN says otherwise.</h2>
+        <p class="cta-sub">
+          This free checker tells you if your e-Invoice is <em>shaped</em> right. It can't tell
+          you the one thing that matters: <strong>will LHDN actually accept it?</strong>
+          The paid tier runs your document through LHDN's real engine and turns the cryptic
+          rejection codes into a plain-English fix.
+        </p>
+        <ul class="cta-points">
+          <li><strong>See the real rejection reason</strong> &mdash; the actual LHDN validation step, decoded (e.g. rule <code>ERR236</code>, not just &ldquo;Invalid&rdquo;).</li>
+          <li><strong>Get the fix, not just the error</strong> &mdash; the exact field to change to turn a red &ldquo;Invalid&rdquo; into a green UUID.</li>
+          <li><strong>Skip the integration</strong> &mdash; managed submission &amp; UUID retrieval (signing for v1.1 on the roadmap).</li>
+        </ul>
+      </div>
+      <div class="cta-actions">
+        <a class="cta-btn" href="mailto:hello@example.com?subject=MyInvois%20tool%20%E2%80%94%20early%20access&amp;body=I'd%20like%20early%20access%20to%20the%20LHDN%20rejection%20diagnostics%20/%20managed%20submission%20tool.">Get early access &rarr;</a>
+        <span class="cta-note">Early access &middot; no account needed to try the free checker below.</span>
+      </div>
+    </section>
+
     <main class="layout">
       <section class="panel input-panel">
         <div class="panel-header">
@@ -28,7 +49,7 @@
             <button type="button" data-sample="invalid-json">Invalid JSON</button>
             <button type="button" data-sample="valid-xml">Valid XML</button>
             <button type="button" data-sample="invalid-xml">Invalid XML</button>
-            <button type="button" data-sample="uat-test" title="A minimal invoice using your registered TIN that validates as Valid in UAT">My UAT test invoice</button>
+            <button type="button" data-sample="uat-test" title="A minimal v1.0 invoice template — you'll be asked for your own TIN/NRIC/name (kept only in your browser)">My UAT test invoice</button>
           </div>
         </div>
 
@@ -60,6 +81,10 @@
         <div class="uat-section">
           <h3 class="uat-title">Submit to LHDN UAT <span class="uat-badge">sandbox</span></h3>
           <div id="uat-panel"></div>
+        </div>
+        <div class="uat-section">
+          <h3 class="uat-title">Diagnose against LHDN <span class="uat-badge paid-badge">paid preview</span></h3>
+          <div id="diagnose-panel"></div>
         </div>
       </section>
     </main>
