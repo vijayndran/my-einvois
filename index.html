@@ -15,6 +15,7 @@
         Structural, business-rule, and digital-signature-structure checks for Malaysia's LHDN e-Invoice
         (UBL 2.1 JSON / XML) documents &mdash; entirely in your browser. Nothing you paste here is uploaded anywhere.
       </p>
+      <div class="service-status" id="service-status" aria-live="polite"></div>
     </header>
 
     <main class="layout">
@@ -64,6 +65,13 @@
         Checks are informational and do not replace submission to the official
         <a href="https://sdk.myinvois.hasil.gov.my/" target="_blank" rel="noopener">MyInvois SDK / API</a>.
         See the <a href="https://github.com/vijayndran/my-einvois" target="_blank" rel="noopener" id="repo-link">source on GitHub</a>.
+      </p>
+      <p class="footer-note">
+        The &ldquo;MyInvois service&rdquo; indicator sends a lightweight reachability
+        ping to LHDN&rsquo;s public API hosts from your browser (no document data
+        is sent). It reports whether the host answers your browser, not LHDN&rsquo;s
+        internal health &mdash; a restrictive local network may show
+        &ldquo;Unreachable&rdquo; even when MyInvois is up.
       </p>
     </footer>
   </div>

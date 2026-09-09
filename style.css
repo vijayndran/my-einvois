@@ -43,6 +43,82 @@ body {
   margin: 0 0 28px;
 }
 
+.service-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 28px;
+  padding: 8px 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.status-label {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+}
+
+.status-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-env {
+  color: var(--text);
+}
+
+.status-state {
+  color: var(--text-dim);
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.status-dot-reachable { background: var(--ok); box-shadow: 0 0 6px rgba(74, 222, 128, 0.6); }
+.status-dot-unreachable { background: var(--error); box-shadow: 0 0 6px rgba(248, 113, 113, 0.5); }
+.status-dot-unknown { background: #475569; }
+.status-dot-checking {
+  background: var(--warning);
+  animation: status-pulse 1s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.status-refresh {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.status-refresh:hover:not(:disabled) {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.status-refresh:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -254,4 +330,13 @@ body {
 
 .footer a {
   color: var(--accent);
+}
+
+.footer-note {
+  margin-top: 10px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #64748b;
+  font-size: 0.72rem;
 }

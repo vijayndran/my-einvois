@@ -1,6 +1,7 @@
 import { validateDocument } from "../validators/index.js";
 import { isValid } from "../types.js";
 import type { ValidationIssue } from "../types.js";
+import { initServiceStatus } from "./service-status.js";
 
 const textarea = document.getElementById("doc-input") as HTMLTextAreaElement;
 const validateBtn = document.getElementById("validate-btn") as HTMLButtonElement;
@@ -8,6 +9,11 @@ const fileInput = document.getElementById("file-input") as HTMLInputElement;
 const fileNameEl = document.getElementById("file-name") as HTMLSpanElement;
 const resultsEl = document.getElementById("results") as HTMLDivElement;
 const badgeEl = document.getElementById("result-badge") as HTMLSpanElement;
+
+const statusBarEl = document.getElementById("service-status");
+if (statusBarEl) {
+  initServiceStatus(statusBarEl);
+}
 
 const SAMPLE_FILES: Record<string, string> = {
   "valid-json": "samples/valid-invoice.json",
