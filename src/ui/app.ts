@@ -10,10 +10,10 @@ const resultsEl = document.getElementById("results") as HTMLDivElement;
 const badgeEl = document.getElementById("result-badge") as HTMLSpanElement;
 
 const SAMPLE_FILES: Record<string, string> = {
-  "valid-json": "/samples/valid-invoice.json",
-  "invalid-json": "/samples/invalid-invoice.json",
-  "valid-xml": "/samples/valid-invoice.xml",
-  "invalid-xml": "/samples/invalid-invoice.xml",
+  "valid-json": "samples/valid-invoice.json",
+  "invalid-json": "samples/invalid-invoice.json",
+  "valid-xml": "samples/valid-invoice.xml",
+  "invalid-xml": "samples/invalid-invoice.xml",
 };
 
 document.querySelectorAll<HTMLButtonElement>("#sample-buttons button[data-sample]").forEach((btn) => {
