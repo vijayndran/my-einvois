@@ -36,12 +36,14 @@ export function initDiagnose(
   getDocument: () => { text: string; format: "JSON" | "XML" | null }
 ): void {
   panel.innerHTML = `
-    <p class="dg-note">
-      <strong>Paid-tier preview.</strong> Runs the document above through LHDN's real
-      sandbox engine and decodes the rejection reasons into plain English with fix hints.
-      This demo uses a shared sandbox identity — the paid product runs against your own
-      LHDN credentials.
-    </p>
+    <details class="dg-note uat-note-paid">
+      <summary><strong>Paid-tier preview</strong> &mdash; runs your document through LHDN's real engine and decodes the rejection into a plain-English fix.</summary>
+      <p>
+        This demo uses a shared sandbox identity, so it's a capability preview.
+        The paid product runs against <strong>your own</strong> LHDN credentials
+        and documents.
+      </p>
+    </details>
     <div class="uat-row">
       <button type="button" id="diagnose-btn" class="primary-btn">Diagnose against LHDN</button>
       <span class="uat-hint">Tip: load &ldquo;My UAT test invoice&rdquo;, then break a field (e.g. set the item classification code to 022) to see a decoded rejection.</span>

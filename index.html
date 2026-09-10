@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyInvois e-Invoice Validator</title>
   <meta name="description" content="Client-side structural, business-rule, and signature-structure validator for Malaysia LHDN MyInvois e-Invoice documents (JSON and XML, UBL 2.1)." />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -34,8 +36,9 @@
         </ul>
       </div>
       <div class="cta-actions">
-        <a class="cta-btn" href="mailto:hello@example.com?subject=MyInvois%20tool%20%E2%80%94%20early%20access&amp;body=I'd%20like%20early%20access%20to%20the%20LHDN%20rejection%20diagnostics%20/%20managed%20submission%20tool.">Get early access &rarr;</a>
-        <span class="cta-note">Early access &middot; no account needed to try the free checker below.</span>
+        <a class="cta-btn" href="#diagnose-section">Try the diagnosis demo &darr;</a>
+        <a class="cta-btn cta-btn-secondary" href="mailto:hello@example.com?subject=MyInvois%20tool%20%E2%80%94%20early%20access&amp;body=I'd%20like%20early%20access%20to%20the%20LHDN%20rejection%20diagnostics%20/%20managed%20submission%20tool.">Get early access &rarr;</a>
+        <span class="cta-note">See a sample decoded rejection below &middot; no account needed to try the free checker.</span>
       </div>
     </section>
 
@@ -53,10 +56,12 @@
           </div>
         </div>
 
+        <label for="doc-input" class="sr-only">e-Invoice document (JSON or XML)</label>
         <textarea
           id="doc-input"
           class="doc-textarea"
           spellcheck="false"
+          aria-label="e-Invoice document (JSON or XML)"
           placeholder="Paste a MyInvois e-Invoice document (JSON or XML) here, or drop a .json / .xml file..."
         ></textarea>
 
@@ -78,12 +83,20 @@
         <div id="results" class="results">
           <p class="empty-state">Paste or load a document, then click Validate.</p>
         </div>
-        <div class="uat-section">
-          <h3 class="uat-title">Submit to LHDN UAT <span class="uat-badge">sandbox</span></h3>
+        <div class="uat-section uat-section-free">
+          <h3 class="uat-title">
+            <span class="uat-icon" aria-hidden="true">&#9203;</span>
+            Submit to LHDN UAT
+            <span class="uat-badge free-badge">Free &middot; sandbox</span>
+          </h3>
           <div id="uat-panel"></div>
         </div>
-        <div class="uat-section">
-          <h3 class="uat-title">Diagnose against LHDN <span class="uat-badge paid-badge">paid preview</span></h3>
+        <div class="uat-section uat-section-paid" id="diagnose-section">
+          <h3 class="uat-title">
+            <span class="uat-icon" aria-hidden="true">&#128269;</span>
+            Diagnose against LHDN
+            <span class="uat-badge paid-badge">Paid &middot; preview</span>
+          </h3>
           <div id="diagnose-panel"></div>
         </div>
       </section>

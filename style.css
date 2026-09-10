@@ -371,23 +371,35 @@ body {
 }
 
 .uat-title {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
   margin: 0 0 10px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.uat-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
 .uat-badge {
   background: rgba(61, 214, 196, 0.15);
   color: var(--accent);
   border-radius: 999px;
-  padding: 2px 8px;
-  font-size: 0.65rem;
-  letter-spacing: 0.04em;
+  padding: 2px 9px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.free-badge {
+  background: rgba(148, 163, 184, 0.16);
+  color: var(--text-dim);
 }
 
 .uat-row {
@@ -605,3 +617,129 @@ body {
 }
 
 .dg-hint strong { color: var(--ok); }
+
+/* ---- Accessibility utilities ---- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .status-dot-checking { animation: none; }
+}
+
+/* Visible keyboard focus ring on every interactive element. Uses the accent
+   colour (>=9.5:1 on both bg and panel) so it clears WCAG AA comfortably. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* The textarea already has a solid border; give it a heavier accent ring. */
+.doc-textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+/* Remove the legacy focus outline in favour of :focus-visible. */
+.doc-textarea:focus { outline: none; }
+
+/* Don't double-draw a ring on mouse clicks for buttons that lack :focus-visible support fallback. */
+button:focus:not(:focus-visible) { outline: none; }
+
+/* ---- Free vs Paid section differentiation ---- */
+.uat-section-free .uat-title { color: var(--text); }
+
+.uat-section-paid {
+  /* subtle warm tint to distinguish the paid preview from the free sandbox */
+  border-top-color: rgba(251, 191, 36, 0.35);
+  scroll-margin-top: 20px;
+}
+
+.uat-section-paid .uat-title { color: var(--text); }
+
+/* ---- Collapsible disclaimer notes (details/summary) ---- */
+.uat-note,
+.dg-note {
+  line-height: 1.5;
+}
+
+.uat-note > summary,
+.dg-note > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  position: relative;
+  padding-left: 18px;
+  outline: none;
+}
+
+.uat-note > summary::-webkit-details-marker,
+.dg-note > summary::-webkit-details-marker { display: none; }
+
+.uat-note > summary strong,
+.dg-note > summary strong { color: var(--text); }
+
+/* Custom disclosure triangle */
+.uat-note > summary::before,
+.dg-note > summary::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.4em;
+  width: 0;
+  height: 0;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 0.15s ease;
+}
+
+.uat-note[open] > summary::before,
+.dg-note[open] > summary::before { transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .uat-note > summary::before,
+  .dg-note > summary::before { transition: none; }
+}
+
+.uat-note > summary:focus-visible,
+.dg-note > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.uat-note .uat-note-list { margin: 8px 0 0; }
+.dg-note > p { margin: 8px 0 0; font-size: 0.78rem; }
+
+/* Paid note keeps the amber tint; free note is neutral to separate the two. */
+.uat-note-free {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+/* ---- Secondary CTA button ---- */
+.cta-btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid rgba(61, 214, 196, 0.5);
+  font-weight: 600;
+}
+
+.cta-btn-secondary:hover {
+  background: rgba(61, 214, 196, 0.10);
+}

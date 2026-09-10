@@ -10,6 +10,7 @@ async function copyStaticAssets() {
   await mkdir(outdir, { recursive: true });
   await cp("index.html", `${outdir}/index.html`);
   await cp("style.css", `${outdir}/style.css`);
+  await cp("favicon.svg", `${outdir}/favicon.svg`);
   if (existsSync("samples")) {
     await cp("samples", `${outdir}/samples`, { recursive: true });
   }
