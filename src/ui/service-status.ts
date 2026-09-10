@@ -31,22 +31,29 @@ export interface EndpointConfig {
 
 // Official MyInvois environment identity endpoints.
 //
-// We probe the OpenID discovery document (`/.well-known/openid-configuration`)
-// rather than `/connect/token`. Both live on the same identity host, so either
-// proves reachability — but the token endpoint answers a bare GET with HTTP 404
-// (it only accepts an authenticated POST), and the browser logs every 404 as a
-// red `[error]` in the console. The discovery document answers GET with 200,
-// so the reachability signal is identical while the console stays clean.
+// We probe the identity token endpoint (`/connect/token`). It only accepts an
+// authenticated POST, so a bare `no-cors` GET comes back HTTP 404 — but a 404
+// still proves the host answered (it is up and serving TLS), which is exactly
+// the reachability signal we want.
+//
+// NOTE: the browser logs that 404 as a red `[error]` ("Failed to load
+// resource: 404") in the devtools console, and this CANNOT be suppressed from
+// JavaScript for a cross-origin `no-cors`/opaque request. We investigated
+// probing a path that returns 2xx instead, but every path on these hosts
+// (including `/`, `/connect/token`, and `/.well-known/openid-configuration`)
+// returns 404 to an unauthenticated GET, so no URL choice avoids the console
+// entry. The two 404 lines on load are therefore expected and harmless — they
+// are the probe working, not an application error.
 export const ENDPOINTS: EndpointConfig[] = [
   {
     id: "prod",
     label: "Production",
-    url: "https://api.myinvois.hasil.gov.my/.well-known/openid-configuration",
+    url: "https://api.myinvois.hasil.gov.my/connect/token",
   },
   {
     id: "preprod",
     label: "Pre-production (Sandbox / UAT)",
-    url: "https://preprod-api.myinvois.hasil.gov.my/.well-known/openid-configuration",
+    url: "https://preprod-api.myinvois.hasil.gov.my/connect/token",
   },
 ];
 
