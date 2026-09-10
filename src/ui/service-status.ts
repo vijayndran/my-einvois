@@ -1,12 +1,12 @@
 // Client-side reachability checker for LHDN MyInvois environments.
 //
 // IMPORTANT — what this can and cannot tell you:
-// The MyInvois identity endpoint (`/connect/token`) does NOT send
-// `Access-Control-Allow-Origin` headers, so a normal (CORS) `fetch` from a
-// browser page cannot read its response. We therefore issue a `no-cors`
-// request: the browser will not let us read the status/body (the response is
-// "opaque"), but the request still either *completes* (the host answered) or
-// *rejects* (DNS failure, connection refused, TLS error, timeout).
+// The MyInvois identity host does NOT send `Access-Control-Allow-Origin`
+// headers, so a normal (CORS) `fetch` from a browser page cannot read its
+// response. We therefore issue a `no-cors` request: the browser will not let
+// us read the status/body (the response is "opaque"), but the request still
+// either *completes* (the host answered) or *rejects* (DNS failure, connection
+// refused, TLS error, timeout).
 //
 // So this is a REACHABILITY probe, not a true health check:
 //   - "reachable"   -> the host answered *something* (it is up and serving TLS)
@@ -30,16 +30,23 @@ export interface EndpointConfig {
 }
 
 // Official MyInvois environment identity endpoints.
+//
+// We probe the OpenID discovery document (`/.well-known/openid-configuration`)
+// rather than `/connect/token`. Both live on the same identity host, so either
+// proves reachability — but the token endpoint answers a bare GET with HTTP 404
+// (it only accepts an authenticated POST), and the browser logs every 404 as a
+// red `[error]` in the console. The discovery document answers GET with 200,
+// so the reachability signal is identical while the console stays clean.
 export const ENDPOINTS: EndpointConfig[] = [
   {
     id: "prod",
     label: "Production",
-    url: "https://api.myinvois.hasil.gov.my/connect/token",
+    url: "https://api.myinvois.hasil.gov.my/.well-known/openid-configuration",
   },
   {
     id: "preprod",
     label: "Pre-production (Sandbox / UAT)",
-    url: "https://preprod-api.myinvois.hasil.gov.my/connect/token",
+    url: "https://preprod-api.myinvois.hasil.gov.my/.well-known/openid-configuration",
   },
 ];
 
@@ -100,10 +107,19 @@ export async function pingEndpoint(url: string, opts: PingOptions = {}): Promise
 // ---------------------------------------------------------------------------
 
 const STATUS_TEXT: Record<ServiceStatus, string> = {
-  reachable: "Reachable",
-  unreachable: "Unreachable",
+  reachable: "Host responding",
+  unreachable: "No response",
   checking: "Checking\u2026",
   unknown: "Unknown",
+};
+
+// Per-status tooltip so the badge itself (not just the footer) explains that
+// this is a browser-side reachability probe, not a MyInvois health check.
+const STATUS_HINT: Record<ServiceStatus, string> = {
+  reachable: "The host answered your browser (it is up and serving TLS). This does not confirm the MyInvois API is healthy.",
+  unreachable: "No response — the host may be down, or your own network/proxy may be blocking it.",
+  checking: "Probe in flight\u2026",
+  unknown: "Not checked yet.",
 };
 
 function renderRow(ep: EndpointConfig): string {
@@ -111,7 +127,7 @@ function renderRow(ep: EndpointConfig): string {
     <span class="status-item" id="status-${ep.id}" title="Reachability of ${ep.label} from your browser">
       <span class="status-dot status-dot-unknown"></span>
       <span class="status-env">${ep.label}</span>
-      <span class="status-state">${STATUS_TEXT.unknown}</span>
+      <span class="status-state" title="${STATUS_HINT.unknown}">${STATUS_TEXT.unknown}</span>
     </span>
   `;
 }
@@ -122,7 +138,10 @@ function applyStatus(id: string, status: ServiceStatus): void {
   const dot = item.querySelector<HTMLElement>(".status-dot");
   const state = item.querySelector<HTMLElement>(".status-state");
   if (dot) dot.className = `status-dot status-dot-${status}`;
-  if (state) state.textContent = STATUS_TEXT[status];
+  if (state) {
+    state.textContent = STATUS_TEXT[status];
+    state.title = STATUS_HINT[status];
+  }
 }
 
 /**

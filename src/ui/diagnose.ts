@@ -45,7 +45,7 @@ export function initDiagnose(
       </p>
     </details>
     <div class="uat-row">
-      <button type="button" id="diagnose-btn" class="primary-btn">Diagnose against LHDN</button>
+      <button type="button" id="diagnose-btn" class="secondary-btn">Diagnose against LHDN</button>
       <span class="uat-hint">Tip: load &ldquo;My UAT test invoice&rdquo;, then break a field (e.g. set the item classification code to 022) to see a decoded rejection.</span>
     </div>
     <div id="diagnose-result" class="uat-result"></div>

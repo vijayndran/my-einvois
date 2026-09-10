@@ -4,6 +4,9 @@
   "description": "Cloudflare Worker proxy that logs in to LHDN MyInvois (UAT/sandbox), submits a signed e-Invoice, and polls for the validation result + UUID. Keeps the client_id/client_secret server-side and sidesteps the browser CORS wall.",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/**/*.test.ts",

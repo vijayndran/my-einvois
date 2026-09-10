@@ -51,8 +51,11 @@ test("ENDPOINTS include production and the UAT/sandbox (preprod) hosts", () => {
   const byId = new Map(ENDPOINTS.map((e) => [e.id, e]));
   assert.ok(byId.has("prod"), "expected a production endpoint");
   assert.ok(byId.has("preprod"), "expected a preprod/UAT endpoint");
-  assert.equal(byId.get("prod")!.url, "https://api.myinvois.hasil.gov.my/connect/token");
-  assert.equal(byId.get("preprod")!.url, "https://preprod-api.myinvois.hasil.gov.my/connect/token");
+  assert.equal(byId.get("prod")!.url, "https://api.myinvois.hasil.gov.my/.well-known/openid-configuration");
+  assert.equal(
+    byId.get("preprod")!.url,
+    "https://preprod-api.myinvois.hasil.gov.my/.well-known/openid-configuration"
+  );
   // UAT users should recognise the sandbox label.
   assert.match(byId.get("preprod")!.label, /UAT|sandbox/i);
 });

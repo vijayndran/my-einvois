@@ -47,7 +47,7 @@ export function initUatSubmit(
       </ul>
     </details>
     <div class="uat-row">
-      <button type="button" id="uat-submit-btn" class="primary-btn">Submit to UAT</button>
+      <button type="button" id="uat-submit-btn" class="secondary-btn">Submit to UAT</button>
       <label class="uat-poll"><input type="checkbox" id="uat-poll" checked /> Poll for result</label>
       <span class="uat-hint">Submits to LHDN sandbox via a proxy (server-held test credentials).</span>
     </div>

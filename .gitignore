@@ -3,3 +3,8 @@ dist/
 *.log
 .DS_Store
 .vscode/
+
+# Secrets — never commit (defence-in-depth; the worker also ignores these)
+.env
+.dev.vars
+*.pem
